@@ -113,7 +113,14 @@ void UserMenu()
                 libraryEntity.RegisterUser();
                 break;
             case "List of all users":
-                DisplayAllUsers();
+                try
+                {
+                    DisplayAllUsers();
+                }
+                catch(Exception ex)
+                {
+                    AnsiConsole.MarkupLine($"[red]Error[/]{ex.Message}");
+                }
                 break;
             case "Find a user":
                 var query = AnsiConsole.Ask<string>("Enter info of the user which you want to find [gray](ex:Fullname/Id)[/]:");
