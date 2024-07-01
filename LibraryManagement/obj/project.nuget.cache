@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "hq/zjBH4FHY=",
+  "success": true,
+  "projectFilePath": "D:\\Projects\\VS_Code_Projects\\Wahid_Ustoz_lessons\\Console_Projects\\OOP_Real_Projects\\LibraryManagement\\LibraryManagement.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\user\\.nuget\\packages\\spectre.console\\0.49.1\\spectre.console.0.49.1.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\spectre.console.cli\\0.49.1\\spectre.console.cli.0.49.1.nupkg.sha512"
+  ],
+  "logs": []
+}
