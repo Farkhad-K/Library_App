@@ -9,7 +9,7 @@ namespace LibraryManagement.Models
     {
         public int Id { get; set; }
         public string Fullname { get; set; } = string.Empty;
-        public Book? BorrowedBook { get; set; } = new Book();
+        public Book BorrowedBook { get; set; } = new Book();
         public int Warnings { get; set; } = 0;
 
         public User()

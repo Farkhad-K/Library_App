@@ -99,6 +99,7 @@ void UserMenu()
             "Find a user",
             "User wants to borrow a book",
             "User wants to return a book",
+            "Delete the user",
             "Clean up the console",
             "Back to Main Menu"
                 }));
@@ -127,6 +128,10 @@ void UserMenu()
                 var userQuery2 = AnsiConsole.Ask<string>("Enter info of the user [gray](ex:Fullname/Id)[/]:");
                 var bookQuery2 = AnsiConsole.Ask<string>("Enter info of the book [gray](ex:ISBN/Title)[/]:");
                 libraryEntity.ReturnBook(userQuery2, bookQuery2);
+                break;
+            case "Delete the user":
+                var query3 = AnsiConsole.Ask<string>("Enter info of the user which you want to delete [gray](ex:Fullname/Id)[/]:");
+                libraryEntity.RemoveUser(query3);
                 break;
             case "Clean up the console":
                 AnsiConsole.Clear();
@@ -223,12 +228,6 @@ Book CreateBook()
     newBook.SmallDescribtion = AnsiConsole.Ask<string>("Enter [green]small description of the book[/]:");
 
     return newBook;
-
-    /*
-    if(newBook.ISBN is null)
-        throw new Exception("ISBN cannot be null");
-    */
-
 }
 
 void DisplayABook(string query)
@@ -249,24 +248,24 @@ void DisplayABook(string query)
 }
 
 void DisplayAllBooks()
+{
+    var table = new Table();
+    table.AddColumn("[green]ISBN[/]");
+    table.AddColumn("[green]Title[/]");
+    table.AddColumn("[green]Author[/]");
+    table.AddColumn("[green]Publication year[/]");
+    table.AddColumn("[green]Language[/]");
+    table.AddColumn("[green]Is Available[/]");
+
+    foreach (var book in libraryEntity.GetAllBooks())
     {
-        var table = new Table();
-        table.AddColumn("[green]ISBN[/]");
-        table.AddColumn("[green]Title[/]");
-        table.AddColumn("[green]Author[/]");
-        table.AddColumn("[green]Publication year[/]");
-        table.AddColumn("[green]Language[/]");
-        table.AddColumn("[green]Is Available[/]");
-
-        foreach (var book in libraryEntity.GetAllBooks())
-        {
-            var available = book.IsAvailable == true ? "Yes" : "No";
-            table.AddRow(book.ISBN, book.Title, book.Author, book.PublicationYear.Year.ToString(), book.Language, available);
-        }
-
-        AnsiConsole.Write(table);
-        AnsiConsole.WriteLine(" ");
+        var available = book.IsAvailable == true ? "Yes" : "No";
+        table.AddRow(book.ISBN, book.Title, book.Author, book.PublicationYear.Year.ToString(), book.Language, available);
     }
+
+    AnsiConsole.Write(table);
+    AnsiConsole.WriteLine(" ");
+}
 
 void DisplayAllBooksOfAuthor(string authorName)
 {
@@ -300,49 +299,49 @@ void DisplayAllBooksOfAuthor(string authorName)
 }
 
 void DisplayAllBorrowedBooks()
+{
+    var table = new Table();
+    table.AddColumn("[green]ISBN[/]");
+    table.AddColumn("[green]Title[/]");
+    table.AddColumn("[green]Author[/]");
+    table.AddColumn("[green]Publication year[/]");
+    table.AddColumn("[green]Language[/]");
+    table.AddColumn("[green]Is Available[/]");
+    table.AddColumn("[green]Borrwed Person[/]");
+
+    foreach (var book in libraryEntity.GetBorrowedBooks())
     {
-        var table = new Table();
-        table.AddColumn("[green]ISBN[/]");
-        table.AddColumn("[green]Title[/]");
-        table.AddColumn("[green]Author[/]");
-        table.AddColumn("[green]Publication year[/]");
-        table.AddColumn("[green]Language[/]");
-        table.AddColumn("[green]Is Available[/]");
-        table.AddColumn("[green]Borrwed Person[/]");
+        var user = libraryEntity.GetBorrowedUser(book.ISBN);
+        var available = book.IsAvailable == true ? "Yes" : "No";
 
-        foreach (var book in libraryEntity.GetBorrowedBooks())
-        {
-            var user = libraryEntity.GetBorrowedUser(book.ISBN);
-            var available = book.IsAvailable == true ? "Yes" : "No";
-
-            table.AddRow(book.ISBN, book.Title, book.Author, book.PublicationYear.Year.ToString(), book.Language, available, user.Fullname);
-        }
-
-        AnsiConsole.Write(table);
-        AnsiConsole.WriteLine(" ");
+        table.AddRow(book.ISBN, book.Title, book.Author, book.PublicationYear.Year.ToString(), book.Language, available, user.Fullname);
     }
+
+    AnsiConsole.Write(table);
+    AnsiConsole.WriteLine(" ");
+}
 
 void DisplayAllAvailableBooks()
+{
+    var table = new Table();
+    table.AddColumn("[green]ISBN[/]");
+    table.AddColumn("[green]Title[/]");
+    table.AddColumn("[green]Author[/]");
+    table.AddColumn("[green]Publication year[/]");
+    table.AddColumn("[green]Language[/]");
+    table.AddColumn("[green]Is Available[/]");
+
+    foreach (var book in libraryEntity.GetAvailableBooks())
     {
-        var table = new Table();
-        table.AddColumn("[green]ISBN[/]");
-        table.AddColumn("[green]Title[/]");
-        table.AddColumn("[green]Author[/]");
-        table.AddColumn("[green]Publication year[/]");
-        table.AddColumn("[green]Language[/]");
-        table.AddColumn("[green]Is Available[/]");
+        var user = libraryEntity.GetBorrowedUser(book.ISBN);
+        var available = book.IsAvailable == true ? "Yes" : "No";
 
-        foreach (var book in libraryEntity.GetAvailableBooks())
-        {
-            var user = libraryEntity.GetBorrowedUser(book.ISBN);
-            var available = book.IsAvailable == true ? "Yes" : "No";
-
-            table.AddRow(book.ISBN, book.Title, book.Author, book.PublicationYear.Year.ToString(), book.Language, available);
-        }
-
-        AnsiConsole.Write(table);
-        AnsiConsole.WriteLine(" ");
+        table.AddRow(book.ISBN, book.Title, book.Author, book.PublicationYear.Year.ToString(), book.Language, available);
     }
+
+    AnsiConsole.Write(table);
+    AnsiConsole.WriteLine(" ");
+}
 
 #endregion
 
@@ -350,8 +349,6 @@ void DisplayAllAvailableBooks()
 
 void DisplayAllUsers()
 {
-    // AnsiConsole.Write(" ");
-
     var table = new Table();
     table.AddColumn("[green]ID[/]");
     table.AddColumn("[green]Fullname[/]");
@@ -360,8 +357,7 @@ void DisplayAllUsers()
 
     foreach (var user in libraryEntity.GetAllUsers())
     {
-        var borrowedBookTitle = user.BorrowedBook == null ? "No books borrowed" : user.BorrowedBook.Title;
-        table.AddRow(user.Id.ToString(), user.Fullname, borrowedBookTitle, user.Warnings.ToString());
+        table.AddRow(user.Id.ToString(), user.Fullname, user.BorrowedBook.Title, user.Warnings.ToString());
     }
 
     AnsiConsole.Write(table);
@@ -400,6 +396,5 @@ void DisplayAUser(string query)
         AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message}\n");
     }
 }
-
 
 #endregion

@@ -47,8 +47,6 @@ public class Book : LibraryItem, IBorrowable
 
     public LibraryItem Return(string query)
     {
-        // if (IsAvailable)
-        //     throw new InvalidOperationException("This book is not currently borrowed.");
 
         if (ISBN.Equals(query, StringComparison.OrdinalIgnoreCase) ||
             Title.Equals(query, StringComparison.OrdinalIgnoreCase))
@@ -63,12 +61,7 @@ public class Book : LibraryItem, IBorrowable
 
     public int DaysLeftToReturn()
     {
-        // if (!BorrowedDate.HasValue)
-        // {
-        //     throw new InvalidOperationException("This book is not currently borrowed.");
-        // }
-
-        var dueDate = BorrowedDate.Value.AddDays(BorrowingPeriodDays);
+        var dueDate = BorrowedDate!.Value.AddDays(BorrowingPeriodDays);
         var daysLeft = (dueDate - DateTime.Now).Days;
 
         return daysLeft;

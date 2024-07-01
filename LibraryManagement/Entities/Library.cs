@@ -13,10 +13,6 @@ public class Library : ISearchable
     private List<Book> ListOfBorrowedBooks = new List<Book>();
     public List<User> Users = new List<User>();
 
-    // private List<Magazine> Magazine = new List<Magazine>();
-
-    // public List<Book> GetAllBooks() => Books.ToList();
-
     #region Book 
 
     public List<Book> GetAllBooks() => Books;
@@ -99,10 +95,25 @@ public class Library : ISearchable
 
     public void RegisterUser()
     {
-        var user = new User();
-        user.Id = int.Parse(AnsiConsole.Ask<string>("Enter [green]Id[/] of the user[red]*[/]:"));
-        user.Fullname = AnsiConsole.Ask<string>("Enter [green]Full name[/] of the user[red]*[/]:");
-        Users.Add(user);
+        try
+        {
+            var user = new User();
+            user.Id = int.Parse(AnsiConsole.Ask<string>("Enter [green]Id[/] of the user[red]*[/]:"));
+            var existingUser = Users.FirstOrDefault(u => u.Id == user.Id);
+            if (existingUser is not null)
+            {
+                AnsiConsole.MarkupLine($"[red]User[/] with this [green]id[/] already exists");
+                return;
+            }
+            user.Fullname = AnsiConsole.Ask<string>("Enter [green]Full name[/] of the user[red]*[/]:");
+
+
+            Users.Add(user);
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]An error occurred[/]: {ex.Message}\n");
+        }
     }
 
     public User SearchAUser(string query)
@@ -136,22 +147,20 @@ public class Library : ISearchable
         try
         {
             var user = SearchAUser(userQuery);
-            if (user.BorrowedBook.Title != string.Empty)
+            if (user.BorrowedBook != null && !string.IsNullOrEmpty(user.BorrowedBook.Title))
             {
                 AnsiConsole.MarkupLine($"[red]User {user.Fullname} already has a borrowed book.[/]\n");
                 return;
             }
 
             var bookToBorrow = Search(bookQuery);
-
             var borrowedBook = bookToBorrow.Borrow(bookQuery);
+
             user.BorrowedBook = (Book)borrowedBook;
             ListOfBorrowedBooks.Add((Book)borrowedBook);
 
             AnsiConsole.MarkupLine($"[red]{bookToBorrow.Title}[/] has been borrowed by [green]{user.Fullname}[/].");
-
-            AnsiConsole.MarkupLine($"User should return book after {bookToBorrow.DaysLeftToReturn().ToString()} days\n");
-
+            AnsiConsole.MarkupLine($"User should return the book after {bookToBorrow.DaysLeftToReturn().ToString()} days\n");
         }
         catch (Exception ex)
         {
@@ -164,7 +173,7 @@ public class Library : ISearchable
         try
         {
             var user = SearchAUser(userQuery);
-            if (user.BorrowedBook == null || user.BorrowedBook.Title == string.Empty)
+            if (user.BorrowedBook == null || string.IsNullOrEmpty(user.BorrowedBook.Title))
             {
                 AnsiConsole.MarkupLine($"[red]User {user.Fullname} does not have a borrowed book.[/]");
                 return;
@@ -175,15 +184,15 @@ public class Library : ISearchable
             if (bookToReturn.DaysLeftToReturn() <= 0)
             {
                 var returnedBook = bookToReturn.Return(bookToReturn.ISBN);
-                user.BorrowedBook = null;
-                AnsiConsole.MarkupLine($"[red]{bookToReturn.Title}[/] has nptbeen returned in-time");
+                user.BorrowedBook = null!; // Ensure this is set to null
+                AnsiConsole.MarkupLine($"[red]{bookToReturn.Title}[/] has not been returned on time");
                 AnsiConsole.MarkupLine($"[green]{user.Fullname}[/] gets a warning. After [red]3[/] warnings user will be removed");
                 user.Warnings++;
             }
             else
             {
                 var returnedBook = bookToReturn.Return(bookToReturn.ISBN);
-                user.BorrowedBook = null;
+                user.BorrowedBook = null!; // Ensure this is set to null
                 AnsiConsole.MarkupLine($"[red]{bookToReturn.Title}[/] has been returned by [green]{user.Fullname}[/].\n");
             }
 
@@ -199,7 +208,7 @@ public class Library : ISearchable
     {
         var borrowedUser = Users.FirstOrDefault(b => b.BorrowedBook.ISBN.ToLower().Trim(' ') == bookQuery.ToLower().Trim(' ') || b.BorrowedBook.Title.ToLower().Trim(' ') == bookQuery.ToLower().Trim(' '));
 
-        return borrowedUser;
+        return borrowedUser!;
     }
 
     #endregion

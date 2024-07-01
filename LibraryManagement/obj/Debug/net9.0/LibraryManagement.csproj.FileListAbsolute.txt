@@ -19,3 +19,4 @@ D:\Projects\VS_Code_Projects\Wahid_Ustoz_lessons\Console_Projects\OOP_Real_Proje
 D:\Projects\VS_Code_Projects\Wahid_Ustoz_lessons\Console_Projects\OOP_Real_Projects\LibraryManagement\obj\Debug\net9.0\LibraryManagement.pdb
 D:\Projects\VS_Code_Projects\Wahid_Ustoz_lessons\Console_Projects\OOP_Real_Projects\LibraryManagement\obj\Debug\net9.0\LibraryManagement.genruntimeconfig.cache
 D:\Projects\VS_Code_Projects\Wahid_Ustoz_lessons\Console_Projects\OOP_Real_Projects\LibraryManagement\obj\Debug\net9.0\ref\LibraryManagement.dll
+D:\Projects\VS_Code_Projects\Wahid_Ustoz_lessons\Console_Projects\OOP_Real_Projects\LibraryManagement\obj\Debug\net9.0\LibraryManagement.sourcelink.json
