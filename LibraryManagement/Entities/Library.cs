@@ -11,7 +11,7 @@ public class Library : ISearchable
 {
     private List<Book> Books = new List<Book>();
     private List<Book> ListOfBorrowedBooks = new List<Book>();
-    public List<User> Users = new List<User>();
+    private List<User> Users = new List<User>();
 
     #region Book 
 
