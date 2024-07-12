@@ -11,7 +11,7 @@ Encapsulation is the mechanism of restricting access to some of the object's com
     private List<Book> Books = new List<Book>();
     private List<Book> ListOfBorrowedBooks = new List<Book>();
     private List<User> Users = new List<User>();
-
+```
 ### Example in Code
 
 In the project, encapsulation is used in classes such as `Book` and `User`. The fields are kept private, and public properties or methods are provided to access and modify the fields.
@@ -27,7 +27,7 @@ public class Book
     public DateOnly PublicationYear { get; set; }
     public string SmallDescribtion { get; set; }
 }
-
+```
 ### Abstraction is implemented through interfaces in the project.
 ```csharp
 public interface IBorrowable
@@ -36,3 +36,4 @@ public interface IBorrowable
     void Return();
     int GetBorrowDuration();
 }
+```
